@@ -1,13 +1,10 @@
 import asyncio
 
-from dotenv import load_dotenv
 from langgraph.graph import StateGraph, START
 
 from node import should_end, plan_step, execute_step, replan_step
 from state import PlanExecute
 
-
-load_dotenv()
 
 async def agent():
     workflow = StateGraph(PlanExecute)
@@ -48,4 +45,5 @@ async def agent():
                 print(v)
 
 
-asyncio.run(agent())
+if __name__ == '__main__':
+    asyncio.run(agent())

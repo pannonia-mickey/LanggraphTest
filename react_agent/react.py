@@ -2,6 +2,7 @@ import asyncio
 import os
 from datetime import datetime
 
+from dotenv import load_dotenv
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain_core.documents import Document
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -10,7 +11,13 @@ from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from pydantic import BaseModel
 
-os.environ["SERPER_API_KEY"] = "0e0f4285a21e3fb5297ff188c96aeb39c488b055"
+load_dotenv()
+
+model = ChatOllama(
+    base_url=os.getenv("BASE_URL"),
+    model=os.getenv("MODEL_NAME"),
+    temperature=0.0,
+)
 
 @tool()
 def search_web(query: str) -> list[Document]:
@@ -33,12 +40,6 @@ def search_web(query: str) -> list[Document]:
     ]
 
     return documents
-
-model = ChatOllama(
-    base_url='http://localhost:11434',
-    model="qwen3",
-    temperature=0.0,
-)
 
 current_date = datetime.now().isoformat()
 

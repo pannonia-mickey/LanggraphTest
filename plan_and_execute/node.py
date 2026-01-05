@@ -1,7 +1,9 @@
 import ast
+import os
 import re
 from typing import Literal, List, Union
 
+from dotenv import load_dotenv
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
@@ -13,9 +15,11 @@ from pydantic import Field, BaseModel
 from state import PlanExecute
 
 
+load_dotenv()
+
 llm = ChatOllama(
-    base_url="http://localhost:11434",
-    model="mistral",
+    base_url=os.getenv("BASE_URL"),
+    model=os.getenv("MODEL_NAME"),
     temperature=0.0,
 )
 
@@ -41,7 +45,6 @@ class Act(BaseModel):
         description="Action to perform. If you want to respond to user, use Response. "
         "If you need to further use tools to get the answer, use Plan."
     )
-
 
 def extract_json(message: AIMessage) -> List[dict]:
     """Extracts JSON content from a string where JSON is embedded between ```json and ``` tags.

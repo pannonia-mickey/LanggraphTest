@@ -1,7 +1,11 @@
+import os
+
+from dotenv import load_dotenv
 from langchain.agents import create_agent
 # highlight-next-line
 from langgraph_swarm import create_swarm, create_handoff_tool
 
+load_dotenv()
 
 def book_hotel(hotel_name: str):
     """Book a hotel"""
@@ -21,19 +25,15 @@ transfer_to_flight_assistant = create_handoff_tool(
 )
 
 flight_assistant = create_agent(
-    model="ollama:mistral",
-    # highlight-next-line
+    model=f"ollama:{os.getenv('MODEL_NAME')}",
     tools=[book_flight, transfer_to_hotel_assistant],
     system_prompt="You are a flight booking assistant",
-    # highlight-next-line
     name="flight_assistant"
 )
 hotel_assistant = create_agent(
-    model="ollama:mistral",
-    # highlight-next-line
+    model=f"ollama:{os.getenv('MODEL_NAME')}",
     tools=[book_hotel, transfer_to_flight_assistant],
     system_prompt="You are a hotel booking assistant",
-    # highlight-next-line
     name="hotel_assistant"
 )
 

@@ -1,4 +1,4 @@
-# Pydantic
+import os
 from typing import Literal, Annotated, TypedDict
 
 from dotenv import load_dotenv
@@ -16,8 +16,8 @@ from pydantic import BaseModel, Field, ValidationError
 load_dotenv()
 
 llm = ChatOllama(
-    base_url="http://localhost:11434",
-    model="mistral",
+    base_url=os.getenv("BASE_URL"),
+    model=os.getenv("MODEL_NAME"),
     temperature=0.2,
 )
 

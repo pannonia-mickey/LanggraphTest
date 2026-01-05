@@ -1,10 +1,10 @@
+import os
 import re
 from typing import List, TypedDict
 
 from dotenv import load_dotenv
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnableConfig
 from langchain_ollama import ChatOllama
 from langgraph.constants import END, START
 from langgraph.graph import StateGraph
@@ -13,8 +13,8 @@ from langgraph.graph import StateGraph
 load_dotenv()
 
 model = ChatOllama(
-    base_url="http://localhost:11434",
-    model="mistral",
+    base_url=os.getenv("BASE_URL"),
+    model=os.getenv("MODEL_NAME"),
     temperature=0.0,
 )
 
@@ -119,7 +119,7 @@ def tool_execution(state: ReWOO):
     results = (state["results"] or []) if "results" in state else []
     _index, _plan, step_name, tool, tool_input = state["step"]
     if tool == "WebSearch":
-        result = search.run(tool_input)
+        result = search.results(tool_input)
     elif tool == "LLM":
         result = model.invoke(tool_input).content
     else:
